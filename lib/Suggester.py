@@ -54,8 +54,8 @@ class Suggester:
         :type word: string
         :rtype float
         """
-        weight_for_prefix_match = 0.6
-        weight_for_frequency = 0.2
+        weight_for_prefix_match = 0.999999999999999999
+        weight_for_frequency = 0.0000000000000000001
         if len(word) < len(user_input):
             return 0
         prefix_match = 0
@@ -125,5 +125,6 @@ class Suggester:
             word = self.words[index][0]
             heapq.heappush(results, (self.calculate_score(index, word, user_input), word))
 
-        sorted_results = heapq.nlargest(num_words, results)
+        words_to_show = len(results) if len(results) < num_words else num_words
+        sorted_results = heapq.nlargest(words_to_show, results)
         return map(lambda result: result[1], sorted_results)
