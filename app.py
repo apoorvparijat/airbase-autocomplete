@@ -13,11 +13,31 @@ suggester = Suggester()
 @app.route("/")
 def suggest():
     user_input = request.args.get('q')
-    s = set()
+    response = {
+        "error": "Parameter missing",
+        "message": "You've not added required query parameter *q* with the word",
+        "allowed_params": {
+            "q": {
+                "type": "required",
+                "value": "string",
+                "desc": "word to auto complete"
+            },
+            "n": {
+                "type": "optional",
+                "value": "positive integer",
+                "desc": "number of auto complete suggestions to return"
+            }
+        }
+    }
     if user_input:
-        num_words = request.args.get('n') if request.args.get('n') else 250
-        s = suggester.suggest_for(user_input, num_words)
-    return jsonify({'total': len(s), 'suggestions': s})
+        try:
+            num_words = int(request.args.get('n')) if request.args.get('n') else 25
+            response = suggester.suggest_for(user_input, num_words)
+            return jsonify({'total': len(response), 'suggestions': response}), 200
+        except ValueError:
+            return jsonify({"error": "Input is invalid"}), 422
+    else:
+        return jsonify(response), 400
 
 
 if __name__ == '__main__':

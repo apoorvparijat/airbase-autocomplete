@@ -109,7 +109,6 @@ class Suggester:
                 if substring_hash in self.inverted_index_of_substr:
                     for word_index in self.inverted_index_of_substr[substring_hash]:
                         array_index_of_suggested_words.add(word_index)
-        # print("array_index_of_suggested_words %s" % len(array_index_of_suggested_words))
         return array_index_of_suggested_words
 
     def suggest_for(self, user_input, num_words=25):
@@ -125,6 +124,6 @@ class Suggester:
             word = self.words[index][0]
             heapq.heappush(results, (self.calculate_score(index, word, user_input), word))
 
-        words_to_show = len(results) if len(results) < num_words else num_words
+        words_to_show = min(len(results), num_words)
         sorted_results = heapq.nlargest(words_to_show, results)
         return map(lambda result: result[1], sorted_results)
