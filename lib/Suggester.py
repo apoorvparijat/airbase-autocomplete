@@ -64,7 +64,7 @@ class Suggester:
                 prefix_match += 1
             else:
                 break
-        res = prefix_match * weight_for_prefix_match + weight_for_frequency * self.words[word_index][1]
+        res = (prefix_match * weight_for_prefix_match + weight_for_frequency * self.words[word_index][1]) / len(word)
         return res
 
     def compute_hash(self, s):
