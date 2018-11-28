@@ -20,9 +20,9 @@ class Suggester:
         the inverted_index_of_substr dictionary looks like
 
         {
-            "hel": (5),
-            "ell": (5),
-            "llo": (5),
+            substring_hash("hel"): (5),
+            substring_hash("ell"): (5),
+            substring_hash("llo"): (5),
             ...
         }
 
