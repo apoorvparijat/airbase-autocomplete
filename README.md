@@ -1,6 +1,8 @@
-## Installation
+## Setup
 
-`pip install -r requirements.txt`
+1. Clone the repo
+2. `pip install -r requirements.txt`
+3. Copy `word_search.tsv` in the data folder
 
 ## Start Server
 
