@@ -41,16 +41,16 @@ class Suggester:
                     self.inverted_index_of_substr[substring_hash] = set()
                     self.inverted_index_of_substr[substring_hash].add(word_index)
 
-    def calculate_score(self, word_index, word, user_input):
+    def calculate_score(self, word, frequency, user_input):
         """ Calculate the ranking score of word basis
         1. Frequency of occurence
         2. Length of the word
         3. Prefix index
 
-        :param word_index: position/index of the word in self.words array
         :param word: the word whose score needs to be calculated
+        :param frequency: frequency of the usage of the words, as given in the data set
         :param user_input: string that user has typed in
-        :type word_index: integer
+        :type frequency: integer
         :type word: string
         :rtype float
         """
@@ -64,7 +64,7 @@ class Suggester:
                 prefix_match += 1
             else:
                 break
-        res = (prefix_match * weight_for_prefix_match + weight_for_frequency * self.words[word_index][1]) / len(word)
+        res = (prefix_match * weight_for_prefix_match + weight_for_frequency * frequency) / len(word)
         return res
 
     def compute_hash(self, s):
@@ -118,11 +118,12 @@ class Suggester:
         :param num_words:
         :return:
         """
-        word_index_of_suggestions = self.get_array_index_of_suggested_words(user_input)
+        word_array_indexes = self.get_array_index_of_suggested_words(user_input)
         results = []
-        for index in word_index_of_suggestions:
+        for index in word_array_indexes:
             word = self.words[index][0]
-            heapq.heappush(results, (self.calculate_score(index, word, user_input), word))
+            frequency = self.words[index][1]
+            heapq.heappush(results, (self.calculate_score(word, frequency, user_input), word))
 
         words_to_show = min(len(results), num_words)
         sorted_results = heapq.nlargest(words_to_show, results)
