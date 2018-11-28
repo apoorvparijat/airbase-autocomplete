@@ -81,21 +81,6 @@ class Suggester:
             p_pow = (p_pow * p) % m
         return hash_value
 
-    def load_file_and_prepare_inverted_index(self):
-        """
-        Load words in memory along with frequency.
-        Also calculating the inverted index of substrings of length 3 to a list of word
-        """
-        data_file = open(self.data_file_path, 'r')
-        word_index = 0
-        for line in data_file:
-            word_info = line.strip().split("\t")
-            word = str(word_info[0])
-            frequency = int(word_info[1])
-            self.words.append((word, frequency))
-            self.add_all_inverted_index(word, word_index)
-            word_index += 1
-
     def get_array_index_of_suggested_words(self, word):
         """ Search for all the substring of "word" in inverted index and return combined set of all word array indexes
         :param word:
@@ -110,6 +95,21 @@ class Suggester:
                     for word_index in self.inverted_index_of_substr[substring_hash]:
                         array_index_of_suggested_words.add(word_index)
         return array_index_of_suggested_words
+
+    def load_file_and_prepare_inverted_index(self):
+        """
+        Load words in memory along with frequency.
+        Also calculating the inverted index of substrings of length 3 to a list of word
+        """
+        data_file = open(self.data_file_path, 'r')
+        word_index = 0
+        for line in data_file:
+            word_info = line.strip().split("\t")
+            word = str(word_info[0])
+            frequency = int(word_info[1])
+            self.words.append((word, frequency))
+            self.add_all_inverted_index(word, word_index)
+            word_index += 1
 
     def suggest_for(self, user_input, num_words=25):
         """ :returns as list of words for auto suggestion. List length is limited by num_words
