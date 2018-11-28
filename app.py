@@ -1,3 +1,4 @@
+import time
 from flask import Flask
 from flask import jsonify
 from flask import request
@@ -31,9 +32,12 @@ def suggest():
     }
     if user_input:
         try:
+            start = time.time()
             num_words = int(request.args.get('n')) if request.args.get('n') else 25
             response = suggester.suggest_for(user_input, num_words)
-            return jsonify({'total': len(response), 'suggestions': response}), 200
+            end = time.time()
+            time_taken = (end - start) * 1000
+            return jsonify({'time_taken': str(round(time_taken, 2)) + 'ms', 'total': len(response), 'suggestions': response}), 200
         except ValueError:
             return jsonify({"error": "Input is invalid"}), 422
     else:
