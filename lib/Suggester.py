@@ -54,8 +54,9 @@ class Suggester:
         :type word: string
         :rtype float
         """
-        weight_for_prefix_match = 0.999999999999999999
-        weight_for_frequency = 0.0000000000000000001
+        weight_for_prefix_match = 0.9999999999999
+        weight_for_frequency = 0.00000000000008
+        weight_for_len_for_word = 0.00000000000002
         if len(word) < len(user_input):
             return 0
         prefix_match = 0
@@ -64,7 +65,9 @@ class Suggester:
                 prefix_match += 1
             else:
                 break
-        res = (prefix_match * weight_for_prefix_match + weight_for_frequency * frequency) / len(word)
+
+        res = (prefix_match * weight_for_prefix_match + weight_for_frequency * frequency) + (
+                weight_for_len_for_word * (1 / len(word)))
         return res
 
     def compute_hash(self, s):
